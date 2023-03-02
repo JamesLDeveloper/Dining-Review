@@ -27,7 +27,17 @@ public class DiningReview {
 
     @Getter @Setter    private String userComments;
 
-    public DiningReview (){
+    @Getter @Setter     private Enum reviewStatus;
+
+    public DiningReview (Long id, String reviewerName, int peanutScore, int eggScore, int dairyScore, String userComments, Enum reviewStatus){
+this.id = id;
+this.reviewerName = reviewerName;
+this.peanutScore = peanutScore;
+this.eggScore = eggScore;
+this.dairyScore = dairyScore;
+this.userComments = userComments;
+this.reviewStatus = reviewStatus;
+
     }
 
 
