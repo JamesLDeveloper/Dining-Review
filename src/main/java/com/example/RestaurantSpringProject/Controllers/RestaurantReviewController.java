@@ -1,11 +1,16 @@
 package com.example.RestaurantSpringProject.Controllers;
 
 import com.example.RestaurantSpringProject.repositories.DiningReviewRepository;
+import com.example.RestaurantSpringProject.repositories.DinerRepository;
+import com.example.RestaurantSpringProject.repositories.RestaurantRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.CrudRepository;
 
 import com.example.RestaurantSpringProject.model.*;
 //import org.apache.commons.text.WordUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.Iterable;
@@ -23,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @RestController
@@ -30,12 +36,97 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class RestaurantReviewController {
 
 private final DiningReviewRepository diningReviewRepository;
+    private final DinerRepository dinerRepository;
+    private final RestaurantRepository restaurantRepository;
 
-
-    public RestaurantReviewController(final DiningReviewRepository diningReviewRepository){
+    public RestaurantReviewController(final DiningReviewRepository diningReviewRepository, DinerRepository dinerRepository , RestaurantRepository restaurantRepository){
         this.diningReviewRepository = diningReviewRepository;
+        this.dinerRepository = dinerRepository;
+        this. restaurantRepository = restaurantRepository;
 }
 
+@PostMapping("/diner")
+public Diner addNewDiner(@RequestBody Diner diner){
+
+        Optional<Diner> addNewDinerOptional = this.dinerRepository.getByDisplayName(diner.getDisplayName());
+
+        if(addNewDinerOptional.isPresent()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+
+        Diner newDiner = this.dinerRepository.save(diner);
+
+        return newDiner;
+}
+
+
+@PutMapping("/diner/{displayName}")
+
+    public Diner updateDinerProfileByDisplayName(@RequestParam String displayName, @RequestParam String city, @RequestParam String state, @RequestParam String zipcode, @RequestParam boolean wantsPeanutAllergyInfo, @RequestParam boolean wantsEggAllergyInfo, @RequestParam boolean wantsDairyAllergyInfo){
+Optional<Diner> displayNameOptional = this.dinerRepository.getByDisplayName(displayName);
+
+if (displayNameOptional.isEmpty()){
+    //HttpStatusCode
+    return null;
+}
+
+Diner dinerToUpdate = displayNameOptional.get();
+
+if (!city.isEmpty()){
+    dinerToUpdate.setCity(city);
+}
+if (!state.isEmpty()){
+    dinerToUpdate.setState(state);
+}
+if (!zipcode.isEmpty()){
+    dinerToUpdate.setZipcode(zipcode);
+}
+//if (wantsDairyAllergyInfo != null) {
+//    diner.setWantsEggAllergyInfo(wantsEggAllergyInfo);
+//}
+
+if (wantsDairyAllergyInfo == true){
+    dinerToUpdate.setWantsEggAllergyInfo(true);
+} else if (wantsDairyAllergyInfo == false){
+    dinerToUpdate.setWantsDairyAllergyInfo(false);
+}
+
+//if(wantsEggAllergyInfo != null) {
+//    diner.setWantsEggAllergyInfo(wantsEggAllergyInfo);
+//}
+
+    if (wantsEggAllergyInfo == true){
+        dinerToUpdate.setWantsEggAllergyInfo(true);
+    } else if (wantsEggAllergyInfo == false) {
+        dinerToUpdate.setWantsEggAllergyInfo(false);
+    }
+//if (wantsPeanutAllergyInfo != null) {
+//        diner.setWantsPeanutAllergyInfo(wantsPeanutAllergyInfo);
+//    }
+
+        if (wantsPeanutAllergyInfo == true){
+            dinerToUpdate.setWantsPeanutAllergyInfo(true);
+        } else if (wantsPeanutAllergyInfo == false) {
+            dinerToUpdate.setWantsPeanutAllergyInfo(false);
+        }
+
+        Diner updatedDiner = this.dinerRepository.save(dinerToUpdate);
+
+        return updatedDiner;
+}
+
+@GetMapping ("/diner/{displayName}")
+    public Diner findByDisplayName(@PathVariable("displayName") String displayName){
+        Optional<Diner> findDinerByDisplayNameOptional = this.dinerRepository.getByDisplayName(displayName);
+
+        if(!findDinerByDisplayNameOptional.isPresent()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        }
+        Diner dinerFoundByDisplayName = findDinerByDisplayNameOptional.get();
+
+        return dinerFoundByDisplayName;
+}
 
 
 
