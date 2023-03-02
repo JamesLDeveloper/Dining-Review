@@ -4,6 +4,7 @@ import com.example.RestaurantSpringProject.repositories.DiningReviewRepository;
 import com.example.RestaurantSpringProject.repositories.DinerRepository;
 import com.example.RestaurantSpringProject.repositories.RestaurantRepository;
 
+import com.example.RestaurantSpringProject.repositories.ReviewStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.CrudRepository;
 
@@ -35,76 +36,79 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/restaurants")
 public class RestaurantReviewController {
 
-private final DiningReviewRepository diningReviewRepository;
+    private final DiningReviewRepository diningReviewRepository;
     private final DinerRepository dinerRepository;
     private final RestaurantRepository restaurantRepository;
 
-    public RestaurantReviewController(final DiningReviewRepository diningReviewRepository, DinerRepository dinerRepository , RestaurantRepository restaurantRepository){
+    private final ReviewStatus reviewStatus;
+
+    public RestaurantReviewController(final DiningReviewRepository diningReviewRepository, DinerRepository dinerRepository, RestaurantRepository restaurantRepository, ReviewStatus reviewStatus) {
         this.diningReviewRepository = diningReviewRepository;
         this.dinerRepository = dinerRepository;
-        this. restaurantRepository = restaurantRepository;
-}
+        this.restaurantRepository = restaurantRepository;
+        this.reviewStatus = reviewStatus;
+    }
 
-@PostMapping("/diner")
-public Diner addNewDiner(@RequestBody Diner diner){
+    @PostMapping("/diner")
+    public Diner addNewDiner(@RequestBody Diner diner) {
 
         Optional<Diner> addNewDinerOptional = this.dinerRepository.getByDisplayName(diner.getDisplayName());
 
-        if(addNewDinerOptional.isPresent()){
+        if (addNewDinerOptional.isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
 
         Diner newDiner = this.dinerRepository.save(diner);
 
         return newDiner;
-}
+    }
 
 
-@PutMapping("/diner/{displayName}")
+    @PutMapping("/diner/{displayName}")
 
-    public Diner updateDinerProfileByDisplayName(@RequestParam String displayName, @RequestParam String city, @RequestParam String state, @RequestParam String zipcode, @RequestParam boolean wantsPeanutAllergyInfo, @RequestParam boolean wantsEggAllergyInfo, @RequestParam boolean wantsDairyAllergyInfo){
-Optional<Diner> displayNameOptional = this.dinerRepository.getByDisplayName(displayName);
+    public Diner updateDinerProfileByDisplayName(@RequestParam String displayName, @RequestParam String city, @RequestParam String state, @RequestParam String zipcode, @RequestParam boolean wantsPeanutAllergyInfo, @RequestParam boolean wantsEggAllergyInfo, @RequestParam boolean wantsDairyAllergyInfo) {
+        Optional<Diner> displayNameOptional = this.dinerRepository.getByDisplayName(displayName);
 
-if (displayNameOptional.isEmpty()){
-    //HttpStatusCode
-    return null;
-}
+        if (displayNameOptional.isEmpty()) {
+            //HttpStatusCode
+            return null;
+        }
 
-Diner dinerToUpdate = displayNameOptional.get();
+        Diner dinerToUpdate = displayNameOptional.get();
 
-if (!city.isEmpty()){
-    dinerToUpdate.setCity(city);
-}
-if (!state.isEmpty()){
-    dinerToUpdate.setState(state);
-}
-if (!zipcode.isEmpty()){
-    dinerToUpdate.setZipcode(zipcode);
-}
+        if (!city.isEmpty()) {
+            dinerToUpdate.setCity(city);
+        }
+        if (!state.isEmpty()) {
+            dinerToUpdate.setState(state);
+        }
+        if (!zipcode.isEmpty()) {
+            dinerToUpdate.setZipcode(zipcode);
+        }
 //if (wantsDairyAllergyInfo != null) {
 //    diner.setWantsEggAllergyInfo(wantsEggAllergyInfo);
 //}
 
-if (wantsDairyAllergyInfo == true){
-    dinerToUpdate.setWantsEggAllergyInfo(true);
-} else if (wantsDairyAllergyInfo == false){
-    dinerToUpdate.setWantsDairyAllergyInfo(false);
-}
+        if (wantsDairyAllergyInfo == true) {
+            dinerToUpdate.setWantsEggAllergyInfo(true);
+        } else if (wantsDairyAllergyInfo == false) {
+            dinerToUpdate.setWantsDairyAllergyInfo(false);
+        }
 
 //if(wantsEggAllergyInfo != null) {
 //    diner.setWantsEggAllergyInfo(wantsEggAllergyInfo);
 //}
 
-    if (wantsEggAllergyInfo == true){
-        dinerToUpdate.setWantsEggAllergyInfo(true);
-    } else if (wantsEggAllergyInfo == false) {
-        dinerToUpdate.setWantsEggAllergyInfo(false);
-    }
+        if (wantsEggAllergyInfo == true) {
+            dinerToUpdate.setWantsEggAllergyInfo(true);
+        } else if (wantsEggAllergyInfo == false) {
+            dinerToUpdate.setWantsEggAllergyInfo(false);
+        }
 //if (wantsPeanutAllergyInfo != null) {
 //        diner.setWantsPeanutAllergyInfo(wantsPeanutAllergyInfo);
 //    }
 
-        if (wantsPeanutAllergyInfo == true){
+        if (wantsPeanutAllergyInfo == true) {
             dinerToUpdate.setWantsPeanutAllergyInfo(true);
         } else if (wantsPeanutAllergyInfo == false) {
             dinerToUpdate.setWantsPeanutAllergyInfo(false);
@@ -113,21 +117,66 @@ if (wantsDairyAllergyInfo == true){
         Diner updatedDiner = this.dinerRepository.save(dinerToUpdate);
 
         return updatedDiner;
-}
+    }
 
-@GetMapping ("/diner/{displayName}")
-    public Diner findByDisplayName(@PathVariable("displayName") String displayName){
+    @GetMapping("/diner/{displayName}")
+    public Diner findByDisplayName(@PathVariable("displayName") String displayName) {
         Optional<Diner> findDinerByDisplayNameOptional = this.dinerRepository.getByDisplayName(displayName);
 
-        if(!findDinerByDisplayNameOptional.isPresent()){
+        if (!findDinerByDisplayNameOptional.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
         }
         Diner dinerFoundByDisplayName = findDinerByDisplayNameOptional.get();
 
         return dinerFoundByDisplayName;
-}
+    }
 
+    @GetMapping("/diner/checkReview/{displayName}")
+    public boolean isRealUser(@RequestParam String reviewerName, @PathVariable String displayName) {
+        if (reviewerName.equals(displayName)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    @PostMapping("/diningReview/postReview")
+    public DiningReview submitReview(@RequestBody DiningReview diningReview) {
+        Optional<DiningReview> newReviewOptional = this.diningReviewRepository.getByReviewerName(diningReview.getReviewerName());
+        if (newReviewOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+        diningReview.setReviewStatus(ReviewStatus.PENDING);
+        DiningReview newReview = this.diningReviewRepository.save(diningReview);
+        return newReview;
+    }
+
+
+    @GetMapping("/diningReview/pendingReviews")
+    public List<DiningReview> getPendingReviewsList (@RequestParam ReviewStatus reviewStatus) {
+
+        List<DiningReview> pendingReviewsList = this.diningReviewRepository.getAllByReviewStatus(reviewStatus);
+
+        return pendingReviewsList;
+    }
+
+@PutMapping("/diningReview/{id}")
+public DiningReview updateReviewStatus (@RequestParam ReviewStatus reviewStatus, @PathVariable("id") Long id) {
+
+        Optional<DiningReview> getReviewToUpdateOptional = this.diningReviewRepository.findById(id);
+
+        if (!getReviewToUpdateOptional.isPresent()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        DiningReview reviewToUpdate = getReviewToUpdateOptional.get();
+
+reviewToUpdate.setReviewStatus(ReviewStatus.APPROVED);
+        DiningReview updatedReview = this.diningReviewRepository.save(reviewToUpdate);
+return  updatedReview;
+}
 
 
 }

@@ -9,4 +9,11 @@ import org.springframework.data.repository.CrudRepository;
 import com.example.RestaurantSpringProject.model.DiningReview;
 
 public interface DiningReviewRepository extends CrudRepository<DiningReview, Long> {
+
+    Optional<DiningReview> getByReviewerName(String reviewerName);
+
+    List<DiningReview> getAllByReviewStatus(ReviewStatus reviewStatus);
+
+    Optional<DiningReview> getById(Long id);
+
 }

@@ -1,5 +1,6 @@
 package com.example.RestaurantSpringProject.model;
 
+import com.example.RestaurantSpringProject.repositories.ReviewStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -27,16 +28,16 @@ public class DiningReview {
 
     @Getter @Setter    private String userComments;
 
-    @Getter @Setter     private Enum reviewStatus;
+    @Getter @Setter     private ReviewStatus reviewStatus;
 
-    public DiningReview (Long id, String reviewerName, int peanutScore, int eggScore, int dairyScore, String userComments, Enum reviewStatus){
+    public DiningReview (Long id, String reviewerName, int peanutScore, int eggScore, int dairyScore, String userComments/*,Enum reviewStatus*/){
 this.id = id;
 this.reviewerName = reviewerName;
 this.peanutScore = peanutScore;
 this.eggScore = eggScore;
 this.dairyScore = dairyScore;
 this.userComments = userComments;
-this.reviewStatus = reviewStatus;
+this.reviewStatus = ReviewStatus.PENDING;
 
     }
 
