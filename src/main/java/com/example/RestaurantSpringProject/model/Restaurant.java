@@ -32,6 +32,8 @@ public class Restaurant {
 
   @Getter @Setter private int numberOfEggScores;
 
+  public Restaurant(){}
+
     public Restaurant(Long id, String restaurantName, String zipcode, double averagePeanutScore, double averageEggScore, double averageDairyScore, double averageOverallScore, int numberOfPeanutScores, int numberOfDairyScores, int numberOfEggScores){
       this.id = id;
       this.restaurantName = restaurantName;

@@ -48,7 +48,7 @@ public class RestaurantReviewController {
 //        this.reviewStatus = reviewStatus;
     }
 
-    @PostMapping("/diner")
+    @PostMapping()
     public Diner addNewDiner(@RequestBody Diner diner) {
 
         Optional<Diner> addNewDinerOptional = this.dinerRepository.getByDisplayName(diner.getDisplayName());

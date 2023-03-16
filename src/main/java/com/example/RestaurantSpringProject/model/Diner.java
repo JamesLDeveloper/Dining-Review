@@ -19,6 +19,8 @@ public class Diner {
     @Getter @Setter boolean wantsEggAllergyInfo;
     @Getter @Setter boolean wantsDairyAllergyInfo;
 
+    public Diner(){}
+
 public Diner (String displayName, String city, String state, String zipcode, boolean wantsPeanutAllergyInfo, boolean wantsEggAllergyInfo, boolean wantsDairyAllergyInfo){
     this.displayName = displayName;
     this.city = city;

@@ -22,6 +22,7 @@ public class AdminReviewAction {
 
     @Getter @Setter boolean reviewApproved;
 
+public AdminReviewAction(){}
 
     public AdminReviewAction(String adminName, boolean reviewApproved){
         this.adminName = adminName;

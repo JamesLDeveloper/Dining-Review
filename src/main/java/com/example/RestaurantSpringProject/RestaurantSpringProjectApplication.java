@@ -1,12 +1,21 @@
 package com.example.RestaurantSpringProject;
 
 import com.example.RestaurantSpringProject.model.Diner;
+import com.example.RestaurantSpringProject.model.DiningReview;
 import com.example.RestaurantSpringProject.repositories.DinerRepository;
+
+import com.example.RestaurantSpringProject.repositories.DiningReviewRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+
+
+
+
+
+
 
 @SpringBootApplication
 public class RestaurantSpringProjectApplication {
@@ -20,15 +29,36 @@ public class RestaurantSpringProjectApplication {
 //		System.out.println(datasource);
 
 
+
+
+
+
+
 	}
 
-//	@Bean
-//	CommandLineRunner commandLineRunner(DinerRepository repository) {
-//		return args ->
+	@Bean
+	CommandLineRunner commandLineRunner(DinerRepository dinerRepository) {
+		return args ->
 				// add some data
-//		repository.save(new Diner("Jane Doe", "Las Vegas", "Nevada", "NZ0849340", false, false, true ));
+		dinerRepository.save(new Diner("Jane Doe", "Las Vegas", "Nevada", "NZ0849340", false, false, true ));
+
+	}
+
+
+	@Bean
+	CommandLineRunner commandLineRunner2(DinerRepository dinerRepository) {
+		return args ->
+				// add some data
+		dinerRepository.save(new Diner("SteveJobs", "Seattle", "Washington", "W9w90358", true, true, true ));
+
+	}
+
+
+//	@Bean
+//	CommandLineRunner commandLineRunner(DiningReviewRepository diningReviewRepository) {
+//		return args ->
+//				// add some data
+//				diningReviewRepository.save(new DiningReview()
 //	}
-
-
 
 }

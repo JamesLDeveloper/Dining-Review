@@ -30,6 +30,8 @@ public class DiningReview {
 
     @Getter @Setter     private ReviewStatus reviewStatus;
 
+    public DiningReview(){}
+
     public DiningReview (Long id, String reviewerName, int peanutScore, int eggScore, int dairyScore, String userComments/*,Enum reviewStatus*/){
 this.id = id;
 this.reviewerName = reviewerName;
