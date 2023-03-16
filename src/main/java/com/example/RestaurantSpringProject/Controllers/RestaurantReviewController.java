@@ -178,5 +178,83 @@ reviewToUpdate.setReviewStatus(ReviewStatus.APPROVED);
 return  updatedReview;
 }
 
+@GetMapping("/diningReview/{restuarantName}")
+           public List<Restaurant> chosenRestaurantReviews (@PathVariable ("restaurantName") String chosenRestaurantName){
+    List<Restaurant> chosenRestaurantReviewList = this.restaurantRepository.getAllByRestaurantName(chosenRestaurantName);
+
+    return chosenRestaurantReviewList;
+    }
+
+@PostMapping("/restaurant")
+public Restaurant addNewRestaurant (@RequestBody Restaurant restaurant){
+
+        Optional<Restaurant> getRestaurantToCheckOptional = this.restaurantRepository.getByRestaurantNameAndZipcode(restaurant.getRestaurantName(), restaurant.getZipcode());
+
+        if (getRestaurantToCheckOptional.isPresent()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+
+//        Restaurant newRestaurantToAdd = getRestaurantToCheckOptional.get();
+
+        Restaurant addedRestaurant = this.restaurantRepository.save(restaurant);
+
+        return addedRestaurant;
 
 }
+
+@GetMapping("/restaurant/{id}")
+    public Restaurant fetchRestaurantDetails (@PathVariable ("id") Long id){
+        Optional<Restaurant> getRestaurantDetailsOptional = this.restaurantRepository.getById(id);
+
+        if (!getRestaurantDetailsOptional.isPresent()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        Restaurant restaurantDetails = getRestaurantDetailsOptional.get();
+
+        return restaurantDetails;
+}
+
+@GetMapping("restaurant/{zipcode}")
+public List<Restaurant> getRestaurantsInZipcodeWithAllergyReview(@PathVariable ("zipcode") String zipcode, @RequestParam ("allergy") boolean wantsEggAlleryInfo, @RequestParam ("allergy") boolean wantsDairyAlleryInfo, @RequestParam ("allergy") boolean wantsPeanutAlleryInfo)
+    {
+        if (wantsEggAlleryInfo) {
+            List<Restaurant> restaurantsInZipcodeWithAllergyReview = this.restaurantRepository.getByZipcodeAndAverageEggScoreOrderByAverageEggScoreDesc(zipcode);
+            List<Restaurant> restaurantsWithEggReviews = new ArrayList<>();
+            for (Restaurant restaurant: restaurantsInZipcodeWithAllergyReview){
+                                if (restaurant.getAverageEggScore() > 0){
+                    restaurantsWithEggReviews.add(restaurant);
+                }
+            }
+            return restaurantsWithEggReviews;
+
+        } else if (wantsDairyAlleryInfo){
+            List<Restaurant> restaurantsInZipcodeWithAllergyReview = this.restaurantRepository.getByZipcodeAndAverageDairyScoreOrderByAverageDairyScoreDesc(zipcode);
+            List<Restaurant> restaurantsWithDairyReviews = new ArrayList<>();
+            for (Restaurant restaurant: restaurantsInZipcodeWithAllergyReview){
+                if (restaurant.getAverageDairyScore() > 0){
+                    restaurantsWithDairyReviews.add(restaurant);
+                }
+            }
+            return restaurantsWithDairyReviews;
+
+        } else if (wantsPeanutAlleryInfo) {
+            List<Restaurant> restaurantsInZipcodeWithAllergyReview = this.restaurantRepository.getByZipcodeAndAveragePeanutScoreOrderByAveragePeanutScoreDesc(zipcode);
+            List<Restaurant> restaurantsWithPeanutReviews = new ArrayList<>();
+            for (Restaurant restaurant: restaurantsInZipcodeWithAllergyReview){
+                if (restaurant.getAveragePeanutScore() > 0){
+                    restaurantsWithPeanutReviews.add(restaurant);
+                }
+            }
+            return restaurantsWithPeanutReviews;
+
+        } else {
+            List<Restaurant> restaurantsInZipCode = this.restaurantRepository.getByZipcode(zipcode);
+            return  restaurantsInZipCode;
+    }
+
+   //     else return List
+    }
+
+}
+

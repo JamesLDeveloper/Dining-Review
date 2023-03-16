@@ -6,10 +6,23 @@ import java.util.Optional;
 
 import com.example.RestaurantSpringProject.model.Diner;
 import com.example.RestaurantSpringProject.model.DiningReview;
+import com.example.RestaurantSpringProject.model.Restaurant;
 import org.springframework.data.repository.CrudRepository;
 
-public interface RestaurantRepository extends CrudRepository<RestaurantRepository, String>{
+public interface RestaurantRepository extends CrudRepository<Restaurant, Long>{
 
+List<Restaurant> getAllByRestaurantName(String restaurantName);
 
+Optional<Restaurant> getByRestaurantNameAndZipcode(String restaurantName, String zipcode);
+
+Optional<Restaurant> getById(Long id);
+
+List<Restaurant> getByZipcodeAndAverageEggScoreOrderByAverageEggScoreDesc(String zipcode);
+
+    List<Restaurant>     getByZipcodeAndAverageDairyScoreOrderByAverageDairyScoreDesc(String zipcode);
+
+    List<Restaurant> getByZipcodeAndAveragePeanutScoreOrderByAveragePeanutScoreDesc(String zipcode);
+
+    List<Restaurant> getByZipcode(String zipcode);
 
 }
