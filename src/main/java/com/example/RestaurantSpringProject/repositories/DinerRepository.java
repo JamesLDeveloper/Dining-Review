@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import com.example.RestaurantSpringProject.model.Diner;
 import com.example.RestaurantSpringProject.model.DiningReview;
+import com.example.RestaurantSpringProject.model.Restaurant;
+import com.example.RestaurantSpringProject.model.AdminReviewAction;
 import org.springframework.data.repository.CrudRepository;
 
 public interface DinerRepository extends CrudRepository<Diner, String> {

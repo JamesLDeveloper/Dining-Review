@@ -22,12 +22,12 @@ public class RestaurantSpringProjectApplication {
 
 	}
 
-	@Bean
-	CommandLineRunner commandLineRunner(DinerRepository repository) {
-		return args ->
+//	@Bean
+//	CommandLineRunner commandLineRunner(DinerRepository repository) {
+//		return args ->
 				// add some data
-		repository.save(new Diner("Jane Doe", "Las Vegas", "Nevada", "NZ0849340", false, false, true ));
-	}
+//		repository.save(new Diner("Jane Doe", "Las Vegas", "Nevada", "NZ0849340", false, false, true ));
+//	}
 
 
 

@@ -6,6 +6,12 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
+import com.example.RestaurantSpringProject.model.Diner;
+import com.example.RestaurantSpringProject.model.DiningReview;
+import com.example.RestaurantSpringProject.model.Restaurant;
+import com.example.RestaurantSpringProject.model.AdminReviewAction;
+
+
 
 @Entity
 public class AdminReviewAction {

@@ -3,7 +3,6 @@ package com.example.RestaurantSpringProject.Controllers;
 import com.example.RestaurantSpringProject.repositories.DiningReviewRepository;
 import com.example.RestaurantSpringProject.repositories.DinerRepository;
 import com.example.RestaurantSpringProject.repositories.RestaurantRepository;
-
 import com.example.RestaurantSpringProject.repositories.ReviewStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.CrudRepository;
@@ -40,13 +39,13 @@ public class RestaurantReviewController {
     private final DinerRepository dinerRepository;
     private final RestaurantRepository restaurantRepository;
 
-    private final ReviewStatus reviewStatus;
+//    private final ReviewStatus reviewStatus;
 
-    public RestaurantReviewController(final DiningReviewRepository diningReviewRepository, DinerRepository dinerRepository, RestaurantRepository restaurantRepository, ReviewStatus reviewStatus) {
+    public RestaurantReviewController(final DiningReviewRepository diningReviewRepository, DinerRepository dinerRepository, RestaurantRepository restaurantRepository/*, ReviewStatus reviewStatus*/) {
         this.diningReviewRepository = diningReviewRepository;
         this.dinerRepository = dinerRepository;
         this.restaurantRepository = restaurantRepository;
-        this.reviewStatus = reviewStatus;
+//        this.reviewStatus = reviewStatus;
     }
 
     @PostMapping("/diner")
@@ -219,7 +218,7 @@ public Restaurant addNewRestaurant (@RequestBody Restaurant restaurant){
 public List<Restaurant> getRestaurantsInZipcodeWithAllergyReview(@PathVariable ("zipcode") String zipcode, @RequestParam ("allergy") boolean wantsEggAlleryInfo, @RequestParam ("allergy") boolean wantsDairyAlleryInfo, @RequestParam ("allergy") boolean wantsPeanutAlleryInfo)
     {
         if (wantsEggAlleryInfo) {
-            List<Restaurant> restaurantsInZipcodeWithAllergyReview = this.restaurantRepository.getByZipcodeAndAverageEggScoreOrderByAverageEggScoreDesc(zipcode);
+            List<Restaurant> restaurantsInZipcodeWithAllergyReview = this.restaurantRepository.getByZipcodeOrderByAverageEggScoreDesc(zipcode);
             List<Restaurant> restaurantsWithEggReviews = new ArrayList<>();
             for (Restaurant restaurant: restaurantsInZipcodeWithAllergyReview){
                                 if (restaurant.getAverageEggScore() > 0){
@@ -229,7 +228,7 @@ public List<Restaurant> getRestaurantsInZipcodeWithAllergyReview(@PathVariable (
             return restaurantsWithEggReviews;
 
         } else if (wantsDairyAlleryInfo){
-            List<Restaurant> restaurantsInZipcodeWithAllergyReview = this.restaurantRepository.getByZipcodeAndAverageDairyScoreOrderByAverageDairyScoreDesc(zipcode);
+            List<Restaurant> restaurantsInZipcodeWithAllergyReview = this.restaurantRepository.getByZipcodeOrderByAverageDairyScoreDesc(zipcode);
             List<Restaurant> restaurantsWithDairyReviews = new ArrayList<>();
             for (Restaurant restaurant: restaurantsInZipcodeWithAllergyReview){
                 if (restaurant.getAverageDairyScore() > 0){
@@ -239,7 +238,7 @@ public List<Restaurant> getRestaurantsInZipcodeWithAllergyReview(@PathVariable (
             return restaurantsWithDairyReviews;
 
         } else if (wantsPeanutAlleryInfo) {
-            List<Restaurant> restaurantsInZipcodeWithAllergyReview = this.restaurantRepository.getByZipcodeAndAveragePeanutScoreOrderByAveragePeanutScoreDesc(zipcode);
+            List<Restaurant> restaurantsInZipcodeWithAllergyReview = this.restaurantRepository.getByZipcodeOrderByAveragePeanutScoreDesc(zipcode);
             List<Restaurant> restaurantsWithPeanutReviews = new ArrayList<>();
             for (Restaurant restaurant: restaurantsInZipcodeWithAllergyReview){
                 if (restaurant.getAveragePeanutScore() > 0){
